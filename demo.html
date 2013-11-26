@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Demo for czBarCode</title>
+	<script type="text/javascript" src="js/excanvas.js"></script>
+	<script type="text/javascript" src="js/jquery-1.9.1.js"></script>	
+	<script type="text/javascript" src="js/czBarCode.js"></script>
+	<script type="text/javascript" src="plugins/czTestRender.js"></script>
+	<script type="text/javascript" src="plugins/code39.js"></script>
+	<script type="text/javascript" src="plugins/ean.js"></script>
+	<style>
+		#testCodeGrid{
+			border-collapse: collapse;
+			width: 800px;
+			text-align: center;
+		}
+		#testCodeGrid td, #testCodeGrid th{
+			padding: 10px;
+			border: grey 1px solid;
+		}
+	</style>
+</head>
+<body>
+	<h1>Demonstration for czBarCode</h1>
+	<table id="testCodeGrid">
+		<tr>
+			<th>Bar code type</th>
+			<th>Test code</th>
+			<th>Code created</th>
+			<th>Note</th>
+		</tr>	
+		<tr>
+			<td>testCode</td>
+			<td>1234567890</td>
+			<td id="test_render"></td>
+			<td>this is a test code generator function</td>
+		</tr>
+		<tr>
+			<td>code39</td>
+			<td>WIKIPEDIA</td>
+			<td id="code39"></td>
+			<td>code 39 generate</td>
+		</tr>
+		<tr>
+			<td>EAN-8</td>
+			<td>96385074</td>
+			<td id="ean8"></td>
+			<td>code EAN-8 generate</td>
+		</tr>
+		<tr>
+			<td>EAN-13</td>
+			<td>5901234123457</td>
+			<td id="ean13"></td>
+			<td>code EAN-13 generate</td>
+		</tr>
+		<tr>
+			<td>UPC</td>
+			<td>123456789999</td>
+			<td id="upc"></td>
+			<td>code UPC generate</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+		$("#test_render").czBarCode("1234567890","testCode");
+		$("#code39").czBarCode("WIKIPEDIA","code39");
+		$("#ean8").czBarCode("96385074","ean8");
+		$("#ean13").czBarCode("5901234123457","ean13");
+		$("#upc").czBarCode("123456789999","upc");
+	</script>
+</body>
+</html>
