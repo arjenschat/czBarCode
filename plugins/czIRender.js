@@ -18,7 +18,7 @@
 		/**
 		 * set default options for bar code
 		 */
-		defaultOptions:{},
+		options:{},
 		/**
 		 * Validate data before rendering
 		 */

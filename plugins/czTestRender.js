@@ -18,17 +18,15 @@
 		/**
 		 * set default options for bar code
 		 */
-		defaultOptions:{
-			test:{
-				padding: 10				
-			}
+		options:{
+			testPadding: 10			
 		},
 		/**
 		 * Initialize any data to help create canvas by setting width and height,
 		 * if width and height was not know ahead of time.
 		 */
 		init: function(){
-			this.options.codeWidth = 4*(this.options.code.length-1)*this.options.lineWidth + 2*this.options.test.padding;
+			this.options.codeWidth = 4*(this.options.code.length-1)*this.options.lineWidth + 2*this.options.testPadding;
 			console.log("width: %d", this.options.width);
 		},
 		/**
@@ -41,7 +39,7 @@
 		 * generate bar code: it needs to handler all type of bar codes declare in the 
 		 */
 		generate: function(){
-			var start = this.options.padding + this.options.test.padding,
+			var start = this.options.paddingLeftRight + this.options.testPadding,
 				width = 2*this.options.lineWidth;
 			for(var i = 0; i< this.options.code.length; i++ ){
 				this.drawLine(start,width);

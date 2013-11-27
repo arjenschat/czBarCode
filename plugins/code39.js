@@ -18,7 +18,7 @@
 		/**
 		 * set default options for bar code
 		 */
-		defaultOptions:{},
+		options:{},
 		/**
 		 * Validate data before rendering
 		 */
@@ -39,9 +39,8 @@
 		/**
 		 * generate bar code, need to handler all type of bar codes declare in the 
 		 */
-		generate: function(){
-			
-			var nextPos = this.options.padding;
+		generate: function(){			
+			var nextPos = this.options.paddingLeftRight;
 			nextPos = this.drawCode(code39Hash['*']+'0',nextPos);
 			// Main Codes
 			var codes = this.options.code;

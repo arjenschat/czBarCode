@@ -13,7 +13,8 @@
 		showCode: true,
 		font: 12,//px
 		codePadding: 5,
-		padding: 10
+		paddingTopBottom: 10,
+		paddingLeftRight: 10
 	};
 	/**
 	 * hash with type point to render function.
@@ -37,20 +38,31 @@
 			console.error('The supply code is invalid for requested type: %s', type);
 			return;
 		}
-		
-		var options = $.extend({},defaultOptions,opts,{code:code, type:type});		
-		render = new $.czBarCode($(this),options);
+		var extOptions = plugin.options;
+		var options = $.extend({},defaultOptions,extOptions,opts,{code:code, type:type});		
+		var render = new czBarCode($(this),options);
 		render.generate();
 		return render;
 	};
-	
-	$.czBarCode = function(jObj,options){
+	//czBarCode.types = barCodeRenders;
+	$.czBarCode = {
+		register: function(render){		
+			console.log("$.czBarCode.register");
+			for(var i = 0; i<render.types.length; i++){
+				var type = render.types[i];
+				console.log("type: %s",type);
+				barCodeRenders[type.toLowerCase()] = render;				
+			}
+			$.extend(czBarCode.prototype,render.prototype);
+		}	
+	}
+	var czBarCode = function(jObj,options){
 		this.jObj = jObj;
 		this.options = options;
+		console.log("param options: %s",JSON.stringify(this.options));
 		this.init();
-		console.log("options: %s",JSON.stringify(options));
-		var width = this.options.codeWidth  + 2*this.options.padding;
-		var height = this.options.barHeight + 2* this.options.padding + (this.options.showCode ? this.options.font + this.options.codePadding : 0 );
+		var width = this.options.codeWidth  + 2*this.options.paddingLeftRight;
+		var height = this.options.barHeight + 2* this.options.paddingTopBottom + (this.options.showCode ? this.options.font + this.options.codePadding : 0 );
 		var canvas = $(format('<canvas style="border: black 1px solid;" width="%d" height="%d"/>', width, height));
 		this.jObj.append(canvas);
 		var el = canvas.get(0);
@@ -62,20 +74,9 @@
 			G_vmlCanvasManager.initElement(el);
 			this.context = el.getContext('2d');	
 		}
-	};
-	$.czBarCode.types = barCodeRenders;
-	$.czBarCode.register = function(render){		
-		console.log("$.czBarCode.register");
-		for(var i = 0; i<render.types.length; i++){
-			var type = render.types[i];
-			console.log("type: %s",type);
-			barCodeRenders[type.toLowerCase()] = render;			
-		}
-		$.extend($.czBarCode.prototype,render.prototype);
-		$.extend(defaultOptions,render.defaultOptions);
-	}
+	};	
 	
-	$.czBarCode.prototype = {
+	czBarCode.prototype = {
 		init:function(){
 			var plugin = barCodeRenders[this.options.type.toLowerCase()];
 			plugin.init.apply(this);
@@ -97,7 +98,7 @@
 		 */
 		drawCode: function(codeStr,start){			
 			//console.log("codeStr: %s, start: %d", codeStr, start);
-			for(var i = 0; i< codeStr.length; i++,start++){
+			for(var i = 0; i< codeStr.length; i++,start+=this.options.lineWidth){
 				var code = codeStr.charAt(i);
 				if(code=='0') continue;
 				this.drawLine(start);
@@ -109,9 +110,9 @@
 		 */
 		drawLine: function(start,width){
 			//console.log("drawLine | start: %d, width: %d", start, width);
-			var top = this.options.padding,
+			var top = this.options.paddingTopBottom,
 				bottom = top + this.options.barHeight,
-				width = width || 1;
+				width = width || this.options.lineWidth;
 			this.context.save();
 			this.context.beginPath();
 			this.context.strokeStyle = "black";
@@ -124,7 +125,7 @@
 		drawText: function(text,x,y,textAlign){
 			//console.log("drawText | text: %s, x: %d, y: %s, textAlign: %s",text, x, y, textAlign);
 			x = x || this.canvas.width/2;			
-			y = y || (this.options.padding + this.options.barHeight + this.options.codePadding);
+			y = y || (this.options.paddingLeftRight + this.options.barHeight + this.options.codePadding);
 			textAlign = textAlign || 'center';
 			//console.log("y: %d",y);
 			textAlign = textAlign || "start";

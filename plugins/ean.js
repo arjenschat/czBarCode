@@ -18,7 +18,13 @@
 		/**
 		 * set default options for bar code
 		 */
-		defaultOptions:{},
+		options:{
+			font: 11,
+			paddingLeftRight: 15,
+			lineWidth: 1,
+			codePadding: -2,
+			extBarHeight: 5
+		},
 		/**
 		 * Validate data before rendering
 		 */
@@ -26,7 +32,14 @@
 		 * Initialize any data to help create canvas by setting width and height,
 		 * if width and height was not know ahead of time.
 		 */
-		init: function(){},
+		init: function(){			
+			if(this.options.type == 'ean8'){
+				this.options.codeWidth = (8*7+11)*this.options.lineWidth;
+			}else{
+				this.options.codeWidth = (13*7+11)*this.options.lineWidth;
+			}							
+
+		},
 		/**
 		 * Validate data before rendering. It call before object created
 		 */
@@ -61,7 +74,57 @@
 		/**
 		 * show code value for current barcode, set to null to use default render
 		 */
-		showCode:null,
+		showCode:function(){
+			var text, x, y, align;
+			switch(this.options.type){
+			case 'ean8':	
+				text = this.options.code.substring(0,4);
+				x = this.options.paddingLeftRight + (3 + 2*7) * this.options.lineWidth;
+				align = 'center';
+				this.drawText(text,x,y,align);
+				
+				text = this.options.code.substring(4);
+				x = this.options.paddingLeftRight + (3 + 4*7 + 5 + 2*7) * this.options.lineWidth;
+				this.drawText(text,x,y,align);
+				break;
+			case 'ean13':
+				text = this.options.code.substring(0,1);
+				x = this.options.paddingLeftRight - 2;
+				align = 'right';
+				this.drawText(text,x,y,align);
+				
+				text = this.options.code.substring(1,7);
+				x = this.options.paddingLeftRight + (3 + 3*7) * this.options.lineWidth;
+				align = 'center';
+				this.drawText(text,x,y,align);
+				
+				text = this.options.code.substring(7);
+				x = this.options.paddingLeftRight + (3 + 6*7 + 5 + 3*7) * this.options.lineWidth;
+				this.drawText(text,x,y,align);
+				
+				break;
+			case 'upc':
+				text = this.options.code.substring(0,1);
+				x = this.options.paddingLeftRight - 2;
+				align = 'right';
+				this.drawText(text,x,y,align);
+				
+				text = this.options.code.substring(1,6);
+				x = this.options.paddingLeftRight + (3 + 3*7) * this.options.lineWidth;
+				align = 'center';
+				this.drawText(text,x,y,align);
+				
+				text = this.options.code.substring(6,11);
+				x = this.options.paddingLeftRight + (3 + 6*7 + 5 + 3*7) * this.options.lineWidth;
+				this.drawText(text,x,y,align);
+				
+				text = this.options.code.substring(11);
+				x = this.options.paddingLeftRight + (3*2 + 12*7 + 5) * this.options.lineWidth + 2;
+				align = 'left';
+				this.drawText(text,x,y,align);
+				break;
+			}
+		},
 		/**
 		 * share function among all chart object. Corresponse to the prototype of a function (class).
 		 * to use the properties of the object.
@@ -70,9 +133,11 @@
 			draw_EAN_13: function(inputCode){	
 				parityString = PARITY_CODES[parseInt(inputCode.charAt(0),10)];
 				// draw the start code
-				var nextPos = this.options.padding;
+				var nextPos = this.options.paddingLeftRight;
+				this.options.barHeight += this.options.extBarHeight;
 				nextPos = this.drawCode(START_CODE,nextPos);
-				// draw the first block			
+				this.options.barHeight -= this.options.extBarHeight;
+				// draw the first block		
 				for (var i=1;i<7;i++){
 					if(parityString.charAt(i-1)=='1'){
 						codes = ODD_LEFT_CODES[parseInt(inputCode.charAt(i),10)];
@@ -83,35 +148,43 @@
 					nextPos = this.drawCode(codes,nextPos);
 				}
 				// draw the middle code
+				this.options.barHeight += this.options.extBarHeight;
 				nextPos = this.drawCode(MIDDLE_CODE,nextPos);
-				
+				this.options.barHeight -= this.options.extBarHeight;
 				// draw the second block
 				for (var i=7;i<13;i++){
 					codes = RIGHT_CODES[parseInt(inputCode.charAt(i),10)];
 					nextPos = this.drawCode(codes,nextPos);
 				}		
 				// draw the end code
+				this.options.barHeight += this.options.extBarHeight;
 				this.drawCode(END_CODE,nextPos);
+				this.options.barHeight -= this.options.extBarHeight;
 			},		
 			draw_EAN_8: function(inputCode){	
 				// draw the start code
-				var nextPos = this.options.padding;
+				var nextPos = this.options.paddingLeftRight;
+				this.options.barHeight += this.options.extBarHeight;
 				nextPos = this.drawCode(START_CODE,nextPos);
+				this.options.barHeight -= this.options.extBarHeight;
 				// draw the first block			
 				for (var i=0;i<4;i++){
 					codes = ODD_LEFT_CODES[parseInt(inputCode.charAt(i),10)];
 					nextPos = this.drawCode(codes,nextPos);
 				}
 				// draw the middle code
+				this.options.barHeight += this.options.extBarHeight;
 				nextPos = this.drawCode(MIDDLE_CODE,nextPos);
-				
+				this.options.barHeight -= this.options.extBarHeight;
 				// draw the second block
 				for (var i=4;i<8;i++){
 					codes = RIGHT_CODES[parseInt(inputCode.charAt(i),10)];
 					nextPos = this.drawCode(codes,nextPos);
 				}		
 				// draw the end code
+				this.options.barHeight += this.options.extBarHeight;
 				this.drawCode(END_CODE,nextPos);
+				this.options.barHeight -= this.options.extBarHeight;
 			},		
 			draw_UPC_A: function(inputCode){
 				this.draw_EAN_13('0'+inputCode);
