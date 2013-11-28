@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="plugins/czTestRender.js"></script>
 	<script type="text/javascript" src="plugins/code39.js"></script>
 	<script type="text/javascript" src="plugins/ean.js"></script>
+	<script type="text/javascript" src="plugins/code128.js"></script>
 	<style>
 		#testCodeGrid{
 			border-collapse: collapse;
@@ -60,6 +61,48 @@
 			<td id="upc"></td>
 			<td>code UPC generate</td>
 		</tr>
+		<tr>
+			<td>Code128</td>
+			<td>Wikipedia</td>
+			<td class="code128"></td>
+			<td>Code 128 generate</td>
+		</tr>
+		<tr>
+			<td>Code128</td>
+			<td>123Wikipedia</td>
+			<td class="code128"></td>
+			<td>Code 128 generate compress with digit in the front</td>
+		</tr>
+		<tr>
+			<td>Code128</td>
+			<td>1234Wikipedia</td>
+			<td class="code128"></td>
+			<td>Code 128 generate compress width digit in the front</td>
+		</tr>
+		<tr>
+			<td>Code128</td>
+			<td>Wiki1234567pedia</td>
+			<td class="code128"></td>
+			<td>Code 128 generate compress with digit in the middle</td>
+		</tr>
+		<tr>
+			<td>Code128</td>
+			<td>Wiki12345678pedia</td>
+			<td class="code128"></td>
+			<td>Code 128 generate compress width digit in the middle</td>
+		</tr>
+		<tr>
+			<td>Code128</td>
+			<td>Wikipedia123</td>
+			<td class="code128"></td>
+			<td>Code 128 generate compress with digit at the end</td>
+		</tr>
+		<tr>
+			<td>Code128</td>
+			<td>Wikipedia1234</td>
+			<td class="code128"></td>
+			<td>Code 128 generate compress width digit at the end</td>
+		</tr>
 	</table>
 	<script type="text/javascript">
 		$("#test_render").czBarCode("1234567890","testCode");
@@ -67,6 +110,11 @@
 		$("#ean8").czBarCode("96385074","ean8");
 		$("#ean13").czBarCode("5901234123457","ean13");
 		$("#upc").czBarCode("123456789999","upc");
+		$(".code128").each(function(i,e){
+			var jObj = $(e);
+			var code = jObj.prev().text();
+			jObj.czBarCode(code,"code128");
+		})
 	</script>
 </body>
 </html>
