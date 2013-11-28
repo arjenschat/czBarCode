@@ -46,8 +46,10 @@
 			var qr = qrcode(this.options.typeNumber, this.options.errorCorrectLevel);
 			qr.addData(this.options.code);
 			qr.make();
-			var img = $(qr.createImgTag()).get(0);
-			this.context.drawImage(img, 5, 5);
+			var self = this;
+			var img = $(qr.createImgTag()).bind('load',function(){
+				self.context.drawImage(img.get(0), 5, 5);				
+			});
 		},
 		/**
 		 * show code value for current barcode, set to null to use default render
