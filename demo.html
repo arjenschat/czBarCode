@@ -4,12 +4,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Demo for czBarCode</title>
 	<script type="text/javascript" src="js/excanvas.js"></script>
+	<script type="text/javascript" src="js/qrcode.js"></script>
 	<script type="text/javascript" src="js/jquery-1.9.1.js"></script>	
 	<script type="text/javascript" src="js/czBarCode.js"></script>
 	<script type="text/javascript" src="plugins/czTestRender.js"></script>
 	<script type="text/javascript" src="plugins/code39.js"></script>
 	<script type="text/javascript" src="plugins/ean.js"></script>
-	<script type="text/javascript" src="plugins/code128.js"></script>
+	<script type="text/javascript" src="plugins/code128.js"></script>	
+	<script type="text/javascript" src="plugins/qrcodePlugin.js"></script>
 	<style>
 		#testCodeGrid{
 			border-collapse: collapse;
@@ -103,6 +105,12 @@
 			<td class="code128"></td>
 			<td>Code 128 generate compress width digit at the end</td>
 		</tr>
+		<tr>
+			<td>QR Code</td>
+			<td>https://github.com/cenzic</td>
+			<td id="qrcode"></td>
+			<td>QR code generate</td>
+		</tr>
 	</table>
 	<script type="text/javascript">
 		$("#test_render").czBarCode("1234567890","testCode");
@@ -114,7 +122,8 @@
 			var jObj = $(e);
 			var code = jObj.prev().text();
 			jObj.czBarCode(code,"code128");
-		})
+		});
+		$("#qrcode").czBarCode("https://github.com/cenzic","qrcode");
 	</script>
 </body>
 </html>
